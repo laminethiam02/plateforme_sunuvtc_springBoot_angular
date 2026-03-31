@@ -1,0 +1,62 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Liste des chauffeurs</h3>
+            <button class="btn btn-primary" (click)="onAdd()">
+                <i class="fas fa-plus"></i> Ajouter
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary" (click)="onSearch()">
+                        <i class="fas fa-search"></i> Rechercher
+                    </button>
+                </div>
+            </div>
+
+            <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Statut</th>
+                        <th>Zone assignée</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="loading"><td colspan="7" class="text-center">Chargement...</td></tr>
+                    <tr *ngFor="let c of chauffeurs">
+                        <td>{{ c.id }}</td>
+                        <td>{{ c.nom }}</td>
+                        <td>{{ c.prenom }}</td>
+                        <td>{{ c.email }}</td>
+                        <td><span class="badge" [ngClass]="getStatutClass(c.statutVehicule)">{{ c.statutVehicule }}</span></td>
+                        <td>{{ c.zoneAssigneeNom || 'Non assigné' }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm mr-1" (click)="onEdit(c.id!)">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                            <button class="btn btn-danger btn-sm" (click)="onDelete(c.id!)">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="chauffeurs.length === 0 && !loading">
+                        <td colspan="7" class="text-center">Aucun chauffeur</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

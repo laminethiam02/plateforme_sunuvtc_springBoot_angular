@@ -1,0 +1,208 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    <h3 class="mb-0">Modifier le véhicule</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Loader pendant le chargement des données -->
+                    <div *ngIf="loading" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Chargement...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Chargement des données...</p>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                        <!-- Immatriculation -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-id-card mr-1"></i> Immatriculation
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-id-card"></i>
+                                    </span>
+                                </div>
+                                <input type="text"
+                                       formControlName="immatriculation"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('immatriculation')?.invalid && form.get('immatriculation')?.touched"
+                                       placeholder="Ex: AB-123-CD"
+                                       autofocus>
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('immatriculation')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> L'immatriculation est obligatoire.
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('immatriculation')?.errors?.['maxlength']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Maximum 20 caractères.
+                            </div>
+                        </div>
+
+                        <!-- Marque & Modèle -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-tag mr-1"></i> Marque
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-tag"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text"
+                                               formControlName="marque"
+                                               class="form-control"
+                                               placeholder="Toyota, Renault...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-tag mr-1"></i> Modèle
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-tag"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text"
+                                               formControlName="modele"
+                                               class="form-control"
+                                               placeholder="Corolla, Clio...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Couleur & Année -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-palette mr-1"></i> Couleur
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-palette"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text"
+                                               formControlName="couleur"
+                                               class="form-control"
+                                               placeholder="Rouge, Bleu...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-calendar-alt mr-1"></i> Année
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="annee"
+                                               class="form-control"
+                                               placeholder="2020">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Capacité & Chauffeur -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-users mr-1"></i> Capacité (places)
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-users"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="capacite"
+                                               class="form-control"
+                                               min="1">
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('capacite')?.errors?.['required']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> La capacité est obligatoire.
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('capacite')?.errors?.['min']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Minimum 1 place.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-user mr-1"></i> Chauffeur assigné
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                        </div>
+                                        <select formControlName="chauffeurId" class="form-control">
+                                            <option value="">-- Aucun --</option>
+                                            <option *ngFor="let c of chauffeurs" [value]="c.id">
+                                                {{ c.nom }} {{ c.prenom }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actif -->
+                        <div class="form-group form-check">
+                            <input type="checkbox"
+                                   formControlName="actif"
+                                   class="form-check-input"
+                                   id="actifCheck">
+                            <label class="form-check-label" for="actifCheck">
+                                Véhicule actif
+                            </label>
+                        </div>
+
+                        <!-- Message d'erreur global -->
+                        <div class="alert alert-danger" *ngIf="error">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> {{ error }}
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="text-right">
+                            <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">
+                                <i class="fas fa-times mr-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="form.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                                <i class="fas fa-save mr-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

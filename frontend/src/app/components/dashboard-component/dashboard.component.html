@@ -1,0 +1,209 @@
+<div class="dashboard-container">
+    <!-- En-tête -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">
+                <i class="fas fa-chart-line title-icon"></i>
+                Tableau de bord SunuVTC-Track
+
+            </h1>
+            <p class="dashboard-subtitle">Suivi opérationnel et statistiques en temps réel</p>
+        </div>
+        <div class="header-actions">
+            <div class="export-dropdown">
+                <button class="btn-export-main" [disabled]="exportLoading || loading">
+                    <i class="fas fa-download" [class.fa-spin]="exportLoading"></i>
+                    {{ exportLoading ? 'Export...' : 'Exporter Données' }}
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="export-menu">
+                    <button class="export-option" (click)="exportToCSV()" [disabled]="exportLoading">
+                        <i class="fas fa-file-csv"></i> Export Complet (CSV)
+                    </button>
+                    <button class="export-option" (click)="exportSummary()" [disabled]="exportLoading">
+                        <i class="fas fa-chart-bar"></i> Résumé Statistiques
+                    </button>
+                    <button class="export-option" (click)="exportCommercialData()" [disabled]="exportLoading">
+                        <i class="fas fa-exchange-alt"></i> Export Courses
+                    </button>
+                </div>
+            </div>
+            <button class="btn-refresh" (click)="refresh()" [disabled]="loading">
+                <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> Actualiser
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay export -->
+    <div class="export-overlay" *ngIf="exportLoading">
+        <div class="export-loading-content">
+            <div class="spinner"></div>
+            <p>Exportation en cours...</p>
+            <p class="export-subtitle">Préparation des fichiers CSV</p>
+        </div>
+    </div>
+
+    <!-- Chargement -->
+    <div class="loading-overlay" *ngIf="loading">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Chargement des données...</p>
+        </div>
+    </div>
+
+    <!-- Erreur -->
+    <div class="error-alert" *ngIf="error && !loading">
+        <div class="alert-content">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ error }}</span>
+            <button class="btn-retry" (click)="refresh()">Réessayer</button>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="stats-grid" *ngIf="!loading && !error">
+        <div class="stat-card card-primary">
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+            <div class="card-content">
+                <div class="stat-value">{{ stats.chauffeurs }}</div>
+                <div class="stat-label">Chauffeurs</div>
+                <div class="stat-trend"><i class="fas fa-chart-line"></i> {{ stats.chauffeursLibres }} libres</div>
+            </div>
+        </div>
+        <div class="stat-card card-success">
+            <div class="card-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="card-content">
+                <div class="stat-value">{{ stats.zones }}</div>
+                <div class="stat-label">Zones</div>
+                <div class="stat-trend"><i class="fas fa-globe"></i> couverture</div>
+            </div>
+        </div>
+        <div class="stat-card card-info">
+            <div class="card-icon"><i class="fas fa-car"></i></div>
+            <div class="card-content">
+                <div class="stat-value">{{ stats.vehicules }}</div>
+                <div class="stat-label">Véhicules</div>
+                <div class="stat-trend">{{ stats.vehiculesActifs }} actifs</div>
+            </div>
+        </div>
+        <div class="stat-card card-warning">
+            <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
+            <div class="card-content">
+                <div class="stat-value">{{ stats.courses }}</div>
+                <div class="stat-label">Courses totales</div>
+                <div class="stat-trend">{{ stats.coursesEnCours }} en cours</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-section" *ngIf="!loading && !error">
+        <div class="section-title">
+            <h2><i class="fas fa-chart-pie"></i> Visualisations</h2>
+            <button class="btn-refresh-charts" (click)="refreshCharts()">
+                <i class="fas fa-sync-alt"></i> Rafraîchir graphiques
+            </button>
+        </div>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header"><h3>État des chauffeurs</h3></div>
+                <div class="chart-container"><canvas #pieChart></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><h3>Entités clés</h3></div>
+                <div class="chart-container"><canvas #barChart></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><h3>Évolution mensuelle des courses</h3></div>
+                <div class="chart-container"><canvas #lineChart></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><h3>État des alertes</h3></div>
+                <div class="chart-container"><canvas #doughnutChart></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicateurs de performance -->
+    <div class="performance-indicators" *ngIf="!loading && !error">
+        <div class="performance-card">
+            <div class="performance-header">
+                <i class="fas fa-chart-simple"></i>
+                <h3>Indicateurs clés de performance</h3>
+            </div>
+            <div class="performance-grid">
+                <div class="indicator">
+                    <div class="indicator-value">{{ occupationTaux }}%</div>
+                    <div class="indicator-label">Taux d'occupation</div>
+                    <div class="indicator-progress"><div class="progress-bar" [style.width.%]="occupationTaux"></div></div>
+                </div>
+                <div class="indicator">
+                    <div class="indicator-value">{{ completionTaux }}%</div>
+                    <div class="indicator-label">Taux de complétion</div>
+                    <div class="indicator-progress"><div class="progress-bar" [style.width.%]="completionTaux"></div></div>
+                </div>
+                <div class="indicator">
+                    <div class="indicator-value">{{ noteMoyenneFormatted }}/5</div>
+                    <div class="indicator-label">Note client moyenne</div>
+                    <div class="indicator-progress"><div class="progress-bar" [style.width.%]="(stats.noteMoyenne/5)*100"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Détails secondaires -->
+    <div class="secondary-stats" *ngIf="!loading && !error">
+        <div class="section-title"><h2><i class="fas fa-chart-simple"></i> Détails opérationnels</h2></div>
+        <div class="secondary-grid">
+            <div class="category-card">
+                <div class="category-header production-header"><i class="fas fa-chart-line"></i><h3>Courses</h3></div>
+                <div class="category-stats">
+                    <div class="secondary-stat"><span class="stat-name">En cours</span><span class="stat-number">{{ stats.coursesEnCours }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">Terminées</span><span class="stat-number">{{ stats.coursesTerminees }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">Annulées</span><span class="stat-number">{{ stats.coursesAnnulees }}</span></div>
+                </div>
+            </div>
+            <div class="category-card">
+                <div class="category-header transformation-header"><i class="fas fa-id-card"></i><h3>Chauffeurs</h3></div>
+                <div class="category-stats">
+                    <div class="secondary-stat"><span class="stat-name">Libres</span><span class="stat-number">{{ stats.chauffeursLibres }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">En course</span><span class="stat-number">{{ stats.chauffeursEnCourse }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">Hors service</span><span class="stat-number">{{ stats.chauffeursHorsService }}</span></div>
+                </div>
+            </div>
+            <div class="category-card">
+                <div class="category-header infrastructure-header"><i class="fas fa-star"></i><h3>Avis clients</h3></div>
+                <div class="category-stats">
+                    <div class="secondary-stat"><span class="stat-name">Total avis</span><span class="stat-number">{{ stats.avis }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">Note moyenne</span><span class="stat-number">{{ noteMoyenneFormatted }}</span></div>
+                </div>
+            </div>
+            <div class="category-card">
+                <div class="category-header commercial-header"><i class="fas fa-bell"></i><h3>Alertes</h3></div>
+                <div class="category-stats">
+                    <div class="secondary-stat"><span class="stat-name">Non lues</span><span class="stat-number">{{ stats.alertesNonLues }}</span></div>
+                    <div class="secondary-stat"><span class="stat-name">Total</span><span class="stat-number">{{ stats.alertes }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières courses -->
+    <div class="recent-movements" *ngIf="!loading && !error && recentCourses.length > 0">
+        <div class="section-title">
+            <h2><i class="fas fa-history"></i> Dernières courses</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="movements-table">
+                <thead><tr><th>ID</th><th>Statut</th><th>Date création</th></tr></thead>
+                <tbody>
+                <tr *ngFor="let c of recentCourses">
+                    <td>{{ c.id }}</td>
+                    <td><span class="badge" [ngClass]="c.statut === 'EN_COURSE' ? 'badge-warning' : (c.statut === 'TERMINEE' ? 'badge-success' : 'badge-danger')">{{ c.statut }}</span></td>
+                    <td>{{ c.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    <h3 class="mb-0">Modifier l'alerte</h3>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="loading" class="text-center py-4">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="sr-only">Chargement...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Chargement des données...</p>
+                    </div>
+
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                        <div class="form-group">
+                            <label><i class="fas fa-user mr-1"></i> Chauffeur *</label>
+                            <select formControlName="chauffeurId" class="form-control">
+                                <option value="">-- Sélectionnez --</option>
+                                <option *ngFor="let c of chauffeurs" [value]="c.id">{{ c.nom }} {{ c.prenom }}</option>
+                            </select>
+                            <div class="text-danger" *ngIf="form.get('chauffeurId')?.errors?.['required']">Requis</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-tag mr-1"></i> Type d'alerte *</label>
+                            <input type="text" formControlName="typeAlerte" class="form-control">
+                            <div class="text-danger" *ngIf="form.get('typeAlerte')?.errors?.['required']">Requis</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-comment mr-1"></i> Message *</label>
+                            <textarea formControlName="message" class="form-control" rows="3"></textarea>
+                            <div class="text-danger" *ngIf="form.get('message')?.errors?.['required']">Requis</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-up mr-1"></i> Latitude</label>
+                                    <input type="number" step="any" formControlName="latitude" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-right mr-1"></i> Longitude</label>
+                                    <input type="number" step="any" formControlName="longitude" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-map mr-1"></i> Zone concernée</label>
+                            <select formControlName="zoneConcerneeId" class="form-control">
+                                <option value="">-- Aucune --</option>
+                                <option *ngFor="let z of zones" [value]="z.id">{{ z.nom }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-check">
+                            <input type="checkbox" formControlName="estLue" class="form-check-input" id="lueCheck">
+                            <label class="form-check-label" for="lueCheck">Déjà lue ?</label>
+                        </div>
+
+                        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+                        <div class="text-right">
+                            <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">
+                                <i class="fas fa-times mr-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="form.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                                <i class="fas fa-save mr-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

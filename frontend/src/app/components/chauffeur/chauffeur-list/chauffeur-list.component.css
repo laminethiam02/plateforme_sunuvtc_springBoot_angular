@@ -1,0 +1,19 @@
+/* Copiez les styles de product-list.component.css et adaptez les couleurs */
+.container { padding: 1rem 1.5rem; }
+.card { border: none; border-radius: 0.75rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); overflow: hidden; }
+.card-header { background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color: white; border-bottom: none; padding: 1.25rem 1.5rem; align-items: center; }
+.card-header h3 { margin: 0; font-weight: 600; font-size: 1.5rem; }
+.card-header .btn-primary { background: white; color: #e67e22; border: none; border-radius: 0.5rem; padding: 0.5rem 1.25rem; font-weight: 600; }
+.card-body { padding: 1.5rem; }
+.form-control { border: 2px solid #e9ecef; border-radius: 0.5rem; padding: 0.75rem 1rem; }
+.table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; }
+.table thead th { background-color: #343a40; color: white; border: none; padding: 1rem 0.75rem; }
+.table tbody tr { background-color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-radius: 0.5rem; }
+.table tbody td { padding: 1rem 0.75rem; vertical-align: middle; border: none; }
+.btn-sm { padding: 0.375rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; transition: all 0.3s ease; border: none; margin-right: 0.25rem; }
+.btn-warning { background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #212529; }
+.btn-danger { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; }
+.badge { padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 600; border-radius: 2rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-success { background-color: #28a745; color: white; }
+.badge-warning { background-color: #ffc107; color: #212529; }
+.badge-secondary { background-color: #6c757d; color: white; }

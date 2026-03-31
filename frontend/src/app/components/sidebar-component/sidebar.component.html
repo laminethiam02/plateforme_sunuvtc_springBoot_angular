@@ -1,0 +1,98 @@
+<nav [class]="isCollapsed ? 'sidebar collapsed' : 'sidebar'" id="sidebar">
+    <div class="sidebar-header">
+        <h3>SunuVTC-Track
+        </h3>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggleSidebar()">
+            <i class="fas" [class.fa-chevron-left]="!isCollapsed" [class.fa-chevron-right]="isCollapsed"></i>
+        </button>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li>
+            <a routerLink="/dashboard" routerLinkActive="active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+
+        <li class="menu-section">
+            <span>Gestion</span>
+        </li>
+
+        <li>
+            <a routerLink="/chauffeurs" routerLinkActive="active">
+                <i class="fas fa-users"></i>
+                <span>Chauffeurs</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/zones" routerLinkActive="active">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Zones</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/courses" routerLinkActive="active">
+                <i class="fas fa-car"></i>
+                <span>Courses</span>
+            </a>
+        </li>
+
+        <!-- Nouvelle section : Gestion de flotte -->
+        <li class="menu-section">
+            <span>Gestion de flotte</span>
+        </li>
+
+        <li>
+            <a routerLink="/vehicules" routerLinkActive="active">
+                <i class="fas fa-truck"></i>
+                <span>Véhicules</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/historique-positions" routerLinkActive="active">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Historique positions</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/alertes" routerLinkActive="active">
+                <i class="fas fa-bell"></i>
+                <span>Alertes</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/historique-tarifs" routerLinkActive="active">
+                <i class="fas fa-chart-line"></i>
+                <span>Historique tarifs</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/avis" routerLinkActive="active">
+                <i class="fas fa-star"></i>
+                <span>Avis clients</span>
+            </a>
+        </li>
+
+        <li>
+            <a routerLink="/audit-logs" routerLinkActive="active">
+                <i class="fas fa-history"></i>
+                <span>Audit logs</span>
+            </a>
+        </li>
+        <li>
+            <a routerLink="/users" routerLinkActive="active">
+                <i class="fas fa-users"></i>
+                <span *ngIf="!isCollapsed">Utilisateurs</span>
+            </a>
+        </li>
+    </ul>
+
+
+</nav>

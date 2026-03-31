@@ -1,0 +1,169 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    <h3 class="mb-0">Modifier le chauffeur</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Loader -->
+                    <div *ngIf="loading" class="text-center py-4">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="sr-only">Chargement...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Chargement des données...</p>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-envelope mr-1"></i> Email <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </div>
+                                <input type="email"
+                                       formControlName="email"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+                                       placeholder="email@exemple.com"
+                                       autofocus>
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('email')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> L'email est obligatoire.
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('email')?.errors?.['email']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Format d'email invalide.
+                            </div>
+                        </div>
+
+                        <!-- Mot de passe (optionnel) -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-lock mr-1"></i> Mot de passe
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-key"></i>
+                                    </span>
+                                </div>
+                                <input type="password"
+                                       formControlName="password"
+                                       class="form-control"
+                                       placeholder="Laisser vide pour ne pas modifier">
+                            </div>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle mr-1"></i> Laissez vide pour conserver le mot de passe actuel.
+                            </small>
+                        </div>
+
+                        <!-- Nom -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-user mr-1"></i> Nom
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </div>
+                                <input type="text"
+                                       formControlName="nom"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('nom')?.errors?.['maxlength']"
+                                       placeholder="Nom">
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('nom')?.errors?.['maxlength']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Maximum 50 caractères.
+                            </div>
+                        </div>
+
+                        <!-- Prénom -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-user mr-1"></i> Prénom
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </div>
+                                <input type="text"
+                                       formControlName="prenom"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('prenom')?.errors?.['maxlength']"
+                                       placeholder="Prénom">
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('prenom')?.errors?.['maxlength']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Maximum 50 caractères.
+                            </div>
+                        </div>
+
+                        <!-- Statut du véhicule -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-car mr-1"></i> Statut du véhicule
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-car"></i>
+                                    </span>
+                                </div>
+                                <select formControlName="statutVehicule" class="form-control">
+                                    <option value="LIBRE">Libre</option>
+                                    <option value="EN_COURSE">En course</option>
+                                    <option value="HORS_SERVICE">Hors service</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Zone assignée -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-map-marker-alt mr-1"></i> Zone assignée
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                </div>
+                                <select formControlName="zoneAssigneeId" class="form-control">
+                                    <option value="">-- Aucune --</option>
+                                    <option *ngFor="let z of zones" [value]="z.id">{{ z.nom }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Message d'erreur global -->
+                        <div class="alert alert-danger" *ngIf="error">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> {{ error }}
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="text-right">
+                            <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">
+                                <i class="fas fa-times mr-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="form.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                                <i class="fas fa-save mr-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    <h3 class="mb-0">Modifier la zone</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Loader -->
+                    <div *ngIf="loading" class="text-center py-4">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="sr-only">Chargement...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Chargement des données...</p>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                        <!-- Nom -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-tag mr-1"></i> Nom <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text"
+                                       formControlName="nom"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('nom')?.invalid && form.get('nom')?.touched"
+                                       placeholder="Nom de la zone"
+                                       autofocus>
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('nom')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Le nom est obligatoire.
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('nom')?.errors?.['maxlength']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Maximum 100 caractères.
+                            </div>
+                        </div>
+
+                        <!-- Couleur -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-palette mr-1"></i> Couleur <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-fill-drip"></i>
+                                    </span>
+                                </div>
+                                <input type="color"
+                                       formControlName="couleur"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('couleur')?.invalid && form.get('couleur')?.touched">
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('couleur')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> La couleur est obligatoire.
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('couleur')?.errors?.['pattern']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Format hexadécimal requis (ex: #FF5733).
+                            </div>
+                        </div>
+
+                        <!-- Tarif -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-money-bill-wave mr-1"></i> Tarif (FCFA) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-euro-sign"></i>
+                                    </span>
+                                </div>
+                                <input type="number"
+                                       formControlName="tarif"
+                                       class="form-control"
+                                       step="0.01"
+                                       [class.is-invalid]="form.get('tarif')?.invalid && form.get('tarif')?.touched"
+                                       placeholder="0.00">
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('tarif')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Le tarif est obligatoire.
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('tarif')?.errors?.['min']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Le tarif doit être positif ou nul.
+                            </div>
+                        </div>
+
+                        <!-- Actif -->
+                        <div class="form-group form-check">
+                            <input type="checkbox"
+                                   formControlName="actif"
+                                   class="form-check-input"
+                                   id="actifCheckbox">
+                            <label class="form-check-label" for="actifCheckbox">
+                                <i class="fas fa-check-circle mr-1"></i> Actif
+                            </label>
+                        </div>
+
+                        <!-- Géométrie (WKT) -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-draw-polygon mr-1"></i> Polygone (WKT) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-shapes"></i>
+                                    </span>
+                                </div>
+                                <textarea formControlName="geom"
+                                          class="form-control"
+                                          rows="4"
+                                          placeholder="POLYGON((x1 y1, x2 y2, ...))"
+                                          [class.is-invalid]="form.get('geom')?.invalid && form.get('geom')?.touched"></textarea>
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('geom')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> La géométrie est obligatoire.
+                            </div>
+                            <small class="form-text text-muted">
+                                Format WKT (Well-Known Text) pour définir le polygone de la zone.
+                                Exemple: POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))
+                            </small>
+                        </div>
+
+                        <!-- Message d'erreur global -->
+                        <div class="alert alert-danger" *ngIf="error">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> {{ error }}
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="text-right">
+                            <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">
+                                <i class="fas fa-times mr-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="form.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                                <i class="fas fa-save mr-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,263 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    <h3 class="mb-0">Modifier la course</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Loader -->
+                    <div *ngIf="loading" class="text-center py-4">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="sr-only">Chargement...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Chargement des données...</p>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                        <!-- Chauffeur -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-user mr-1"></i> Chauffeur <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-users"></i>
+                                    </span>
+                                </div>
+                                <select formControlName="chauffeurId" class="form-control">
+                                    <option value="">-- Sélectionnez --</option>
+                                    <option *ngFor="let c of chauffeurs" [value]="c.id">
+                                        {{ c.prenom }} {{ c.nom }} ({{ c.statutVehicule }})
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('chauffeurId')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Le chauffeur est obligatoire.
+                            </div>
+                        </div>
+
+                        <!-- Début -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-calendar-alt mr-1"></i> Début <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                                <input type="datetime-local"
+                                       formControlName="debut"
+                                       class="form-control"
+                                       [class.is-invalid]="form.get('debut')?.invalid && form.get('debut')?.touched">
+                            </div>
+                            <div class="text-danger" *ngIf="form.get('debut')?.errors?.['required']">
+                                <i class="fas fa-exclamation-circle mr-1"></i> La date de début est obligatoire.
+                            </div>
+                        </div>
+
+                        <!-- Fin (optionnel) -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-calendar-check mr-1"></i> Fin
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                </div>
+                                <input type="datetime-local"
+                                       formControlName="fin"
+                                       class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Coordonnées départ -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-map-pin mr-1"></i> Latitude départ <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-globe"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="latDepart"
+                                               class="form-control"
+                                               step="0.000001"
+                                               placeholder="ex: 14.7167">
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('latDepart')?.errors?.['required']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Obligatoire.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-map-pin mr-1"></i> Longitude départ <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-globe"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="lngDepart"
+                                               class="form-control"
+                                               step="0.000001"
+                                               placeholder="ex: -17.4667">
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('lngDepart')?.errors?.['required']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Obligatoire.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coordonnées arrivée (optionnelles) -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-map-marker-alt mr-1"></i> Latitude arrivée
+                                    </label>
+                                    <input type="number"
+                                           formControlName="latArrivee"
+                                           class="form-control"
+                                           step="0.000001"
+                                           placeholder="ex: 14.7167">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-map-marker-alt mr-1"></i> Longitude arrivée
+                                    </label>
+                                    <input type="number"
+                                           formControlName="lngArrivee"
+                                           class="form-control"
+                                           step="0.000001"
+                                           placeholder="ex: -17.4667">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Distance et montant -->
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-road mr-1"></i> Distance (km)
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-ruler"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="distanceKm"
+                                               class="form-control"
+                                               step="0.01"
+                                               placeholder="0.00">
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('distanceKm')?.errors?.['min']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Doit être positive.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-money-bill-wave mr-1"></i> Montant (FCFA)
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-euro-sign"></i>
+                                            </span>
+                                        </div>
+                                        <input type="number"
+                                               formControlName="montant"
+                                               class="form-control"
+                                               step="0.01"
+                                               placeholder="0.00">
+                                    </div>
+                                    <div class="text-danger" *ngIf="form.get('montant')?.errors?.['min']">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Doit être positif.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statut -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-tag mr-1"></i> Statut
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-flag-checkered"></i>
+                                    </span>
+                                </div>
+                                <select formControlName="statut" class="form-control">
+                                    <option value="EN_COURSE">En cours</option>
+                                    <option value="TERMINEE">Terminée</option>
+                                    <option value="ANNULEE">Annulée</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Zones traversées -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-draw-polygon mr-1"></i> Zones traversées
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-map"></i>
+                                    </span>
+                                </div>
+                                <textarea formControlName="zonesTraversees"
+                                          class="form-control"
+                                          rows="2"
+                                          placeholder="Liste des zones traversées (optionnel)"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Message d'erreur global -->
+                        <div class="alert alert-danger" *ngIf="error">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> {{ error }}
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="text-right">
+                            <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">
+                                <i class="fas fa-times mr-1"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-warning" [disabled]="form.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                                <i class="fas fa-save mr-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
