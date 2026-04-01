@@ -231,8 +231,8 @@ http://localhost:4200
 
 ## 👨‍💻 Auteur
 
-**Lamine THIAM**
-Élève ingénieur en Informatique, Réseaux et Télécommunications
+**Equipe DEKK MOBILITY**
+eleves-ingenieurs en Informatique, Réseaux et Télécommunications.à L'IPSL
 📍 Sénégal
 
 ---
@@ -267,4 +267,3 @@ Merci à tous ceux qui ont contribué au développement de ce projet.
 
 
 
-Tu veux que je t’aide à **publier directement ton projet sur GitHub étape par étape** ?
